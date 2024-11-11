@@ -1,18 +1,21 @@
 package ru.hogwarts.school.REST_APP.model;
 
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Faculty {
     private Long id;
     private String name;
     private String color;
 
-    public Faculty(Long id, String name, String color) {
-        this.id = id;
-        this.name = name;
-        this.color = color;
-    }
     public Long getId() {
         return id;
     }

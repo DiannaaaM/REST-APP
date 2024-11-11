@@ -3,42 +3,38 @@ package ru.hogwarts.school.REST_APP.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.REST_APP.model.Student;
+import ru.hogwarts.school.REST_APP.repository.StudentRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
 
-    private final Map<Long, Student> students = new HashMap<>();
-    private Long nextId = 1L;
+    private final StudentRepository studentRepository;
 
-    public Student createStudent(String name, int age) {
-        Student student = new Student(nextId, name, age);
-        students.put(nextId, student);
-        nextId++;
-        return student;
+    @Autowired
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
+    public Student createStudent(Student student) {
+        return studentRepository.save(student);
     }
 
     public Student findStudent(Long id) {
-        return students.get(id);
+        return studentRepository.findById( Math.toIntExact( id ) ).orElse(null);
     }
 
-    public Student updateStudent(Long id, String name, int age) {
-        Student student = new Student(id, name, age);
-        students.put(id, student);
-        return student;
+    public Student updateStudent(Long id, Student student) {
+        student.setId(id);
+        return studentRepository.save(student);
     }
 
     public void deleteStudent(Long id) {
-        students.remove(id);
+        studentRepository.deleteById( Math.toIntExact( id ) );
     }
 
-    public Collection<Student> findStudentsByAge(int age) {
-        return students.values().stream()
-                .filter(student -> student.getAge() == age)
-                .collect( Collectors.toList());
+    public Collection<Student> findStudentsByAge(long age) {
+        return studentRepository.findStudentByAge(age);
     }
 }

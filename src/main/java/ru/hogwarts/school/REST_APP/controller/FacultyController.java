@@ -18,7 +18,7 @@ public class FacultyController {
 
     @PostMapping
     public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-        Faculty created = facultyService.createFaculty(faculty.getName(), faculty.getColor());
+        Faculty created = facultyService.createFaculty(faculty);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
@@ -34,7 +34,7 @@ public class FacultyController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Faculty> updateFaculty(@PathVariable Long id, @RequestBody Faculty faculty) {
-        Faculty updated = facultyService.updateFaculty(id, faculty.getName(), faculty.getColor());
+        Faculty updated = facultyService.updateFaculty(id, faculty);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
