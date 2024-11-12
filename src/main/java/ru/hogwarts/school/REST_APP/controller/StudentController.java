@@ -48,4 +48,13 @@ public class StudentController {
     public ResponseEntity<Collection<Student>> findStudentsByAge(@RequestParam int age) {
         return new ResponseEntity<>(studentService.findStudentsByAge(age), HttpStatus.OK);
     }
+
+    @GetMapping("/{min}-{max}")
+    public ResponseEntity<Collection<Student>> findByAgeBetween(@PathVariable int min, @PathVariable int max) {
+        return new ResponseEntity<>(studentService.findByAgeBetween( min, max ), HttpStatus.OK);
+    }
+    @GetMapping("{faculty}-student")
+    public ResponseEntity<Collection<Student>> findByFaculty(@PathVariable String faculty) {
+        return new ResponseEntity<>(studentService.findByFaculty(faculty), HttpStatus.OK);
+    }
 }

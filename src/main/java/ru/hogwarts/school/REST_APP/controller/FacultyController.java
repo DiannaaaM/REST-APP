@@ -48,5 +48,15 @@ public class FacultyController {
     public ResponseEntity<Collection<Faculty>> findFacultiesByColor(@RequestParam String color) {
         return new ResponseEntity<>(facultyService.findFacultiesByColor(color), HttpStatus.OK);
     }
+
+    @GetMapping("/{name}--{color}")
+    public ResponseEntity<Collection<Faculty>> findFacultiesByColorAndNameIgnoreCase(@PathVariable String name, @PathVariable String color) {
+        return new ResponseEntity<>(facultyService.findFacultiesByColorAndNameIgnoreCase(name, color), HttpStatus.OK);
+    }
+
+    @GetMapping("/{faculty}-students")
+    public ResponseEntity<Collection<Faculty>> findFacultiesByFaculty(@PathVariable String faculty) {
+        return new ResponseEntity<>( facultyService.findStudentsInFaculty( faculty ), HttpStatus.OK );
+    }
 }
 

@@ -13,4 +13,6 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     List<Student> deleteStudentById(Long id);
     List<Student> createStudent(Long id, Student student);
     List<Student> updateStudentById(Long id, Student student);
+    List<Student> findByAgeBetween(long min, long max);
+    List<Student> findByFaculty(String faculty);
 }
