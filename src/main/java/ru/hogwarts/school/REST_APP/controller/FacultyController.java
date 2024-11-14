@@ -2,6 +2,7 @@ package ru.hogwarts.school.REST_APP.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.REST_APP.model.Faculty;
@@ -16,7 +17,7 @@ public class FacultyController {
     @Autowired
     private FacultyService facultyService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
         Faculty created = facultyService.createFaculty(faculty);
         return new ResponseEntity<>(created, HttpStatus.CREATED);

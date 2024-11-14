@@ -2,11 +2,14 @@ package ru.hogwarts.school.REST_APP.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.REST_APP.model.Student;
 import ru.hogwarts.school.REST_APP.service.StudentService;
 
+import java.io.IOException;
 import java.util.Collection;
 
 @RestController
@@ -16,7 +19,7 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         Student created = studentService.createStudent(student);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
