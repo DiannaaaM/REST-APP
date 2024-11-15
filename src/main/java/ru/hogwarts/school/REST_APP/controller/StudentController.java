@@ -11,6 +11,7 @@ import ru.hogwarts.school.REST_APP.service.StudentService;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("student")
@@ -59,5 +60,20 @@ public class StudentController {
     @GetMapping("{faculty}-student")
     public ResponseEntity<Collection<Student>> findByFaculty(@PathVariable String faculty) {
         return new ResponseEntity<>(studentService.findByFaculty(faculty), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Integer> findAll() {
+        return new ResponseEntity<>(studentService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getTop5")
+    public ResponseEntity<List<Student>> getTop5(){
+        return new ResponseEntity<>(studentService.findTop5(), HttpStatus.OK);
+    }
+
+    @GetMapping("/fingAverageAge")
+    public ResponseEntity<Integer> findAverageAge() {
+        return new ResponseEntity<>(studentService.findAverageAge(), HttpStatus.OK);
     }
 }

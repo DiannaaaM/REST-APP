@@ -1,19 +1,12 @@
 package ru.hogwarts.school.REST_APP.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.REST_APP.model.Avatar;
 import ru.hogwarts.school.REST_APP.model.Student;
 import ru.hogwarts.school.REST_APP.repository.StudentRepository;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
-
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -54,4 +47,14 @@ public class StudentService {
         return studentRepository.findByFaculty(faculty);
     }
 
+    public List<Student> findAll(){
+    return studentRepository.findAll();
     }
+    public int findAverageAge(){
+        return studentRepository.findAverageAge();
+    }
+
+    public List<Student> findTop5(){
+        return studentRepository.findTop5();
+    }
+}

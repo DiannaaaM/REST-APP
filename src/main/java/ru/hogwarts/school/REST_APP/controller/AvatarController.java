@@ -11,6 +11,7 @@ import ru.hogwarts.school.REST_APP.model.Avatar;
 import ru.hogwarts.school.REST_APP.service.AvatarService;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @RestController
@@ -41,5 +42,10 @@ public class AvatarController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.IMAGE_JPEG ); // Or other appropriate MediaType
         return new ResponseEntity<>( imageData, headers, HttpStatus.OK );
+    }
+
+    @GetMapping("/get-{allAvatars}+{sizePage}")
+    public ResponseEntity<List<Avatar>> getAllAvatars(@PathVariable Integer allAvatars, @PathVariable Integer sizePage) {
+        return new ResponseEntity<List<Avatar>>( avatarService.getAllAvatars( allAvatars, sizePage ), HttpStatus.OK );
     }
 }
