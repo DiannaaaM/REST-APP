@@ -21,6 +21,7 @@ public class Student {
     @JoinColumn(name = "faculty_id")
     private String faculty;
 
+
     public Long getId() {
         return id;
     }
