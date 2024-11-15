@@ -6,6 +6,7 @@ import ru.hogwarts.school.REST_APP.model.Student;
 import ru.hogwarts.school.REST_APP.repository.StudentRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -36,5 +37,24 @@ public class StudentService {
 
     public Collection<Student> findStudentsByAge(long age) {
         return studentRepository.findStudentByAge(age);
+    }
+
+    public Collection<Student> findByAgeBetween(long min, long max) {
+        return studentRepository.findByAgeBetween(min, max);
+    }
+
+    public Collection<Student> findByFaculty(String faculty) {
+        return studentRepository.findByFaculty(faculty);
+    }
+
+    public List<Student> findAll(){
+    return studentRepository.findAll();
+    }
+    public int findAverageAge(){
+        return studentRepository.findAverageAge();
+    }
+
+    public List<Student> findTop5(){
+        return studentRepository.findTop5();
     }
 }
