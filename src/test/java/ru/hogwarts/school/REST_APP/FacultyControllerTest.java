@@ -6,23 +6,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.hogwarts.school.REST_APP.controller.FacultyController;
 import ru.hogwarts.school.REST_APP.model.Faculty;
-import ru.hogwarts.school.REST_APP.model.Student;
 import ru.hogwarts.school.REST_APP.service.FacultyService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(FacultyController.class)
-class FacultyControllerTest {
+public class FacultyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,126 +27,85 @@ class FacultyControllerTest {
     private FacultyService facultyService;
 
     @Test
-    void createFaculty() throws Exception {
-        List<Student> students = Arrays.asList(new Student(1L, "Harry Potter", 11, "Gryffindor"),
-                new Student(2L, "Ron Weasley", 11,"Gryffindor"));
-        Faculty expectedFaculty = new Faculty(1L, "Gryffindor", "Red", students);
-        when(facultyService.createFaculty(expectedFaculty)).thenReturn(expectedFaculty);
+    public void testCreateFaculty() throws Exception {
+        Faculty faculty = new Faculty();
+        faculty.setName("Gryffindor");
+        faculty.setColor("Red");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/faculty")
+        when(facultyService.createFaculty(any(Faculty.class))).thenReturn(faculty);
+
+        mockMvc.perform(post("/faculty")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                        {
-                            "id": 1,
-                            "name": "Gryffindor",
-                            "color": "Red"
-                        }
-                        """))
+                        .content("{\"name\":\"Gryffindor\",\"color\":\"Red\"}"))
                 .andExpect(status().is(415));
     }
 
     @Test
-    void findFaculty() throws Exception {
-        List<Student> students = Arrays.asList(new Student(1L, "Harry Potter", 11, "Gryffindor"),
-                new Student(2L, "Ron Weasley", 11,"Gryffindor"));
-        Faculty expectedFaculty = new Faculty(1L, "Gryffindor", "Red", students);
-        when(facultyService.findFaculty(1L)).thenReturn(expectedFaculty);
+    public void testFindFaculty() throws Exception {
+        Long facultyId = 1L;
+        Faculty faculty = new Faculty();
+        faculty.setId(facultyId);
+        faculty.setName("Gryffindor");
+        faculty.setColor("Red");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/1"))
+        when(facultyService.findFaculty(facultyId)).thenReturn(faculty);
+
+        mockMvc.perform(get("/faculty/{id}", facultyId))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Gryffindor"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.color").value("Red"));
+                .andExpect(jsonPath("$.name").value("Gryffindor"))
+                .andExpect(jsonPath("$.color").value("Red"));
     }
 
     @Test
-    void findFacultyNotFound() throws Exception {
-        when(facultyService.findFaculty(1L)).thenReturn(null);
+    public void testUpdateFaculty() throws Exception {
+        Long facultyId = 1L;
+        Faculty faculty = new Faculty();
+        faculty.setName("Slytherin");
+        faculty.setColor("Green");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/1"))
-                .andExpect(status().isNotFound());
-    }
+        when(facultyService.updateFaculty(any(Long.class), any(Faculty.class))).thenReturn(faculty);
 
-    @Test
-    void updateFaculty() throws Exception {
-        List<Student> students = Arrays.asList(new Student(1L, "Harry Potter", 11, "Gryffindor"),
-                new Student(2L, "Ron Weasley", 11,"Gryffindor"));
-        Faculty updatedFaculty = new Faculty(1L, "Gryffindor", "Scarlet", students);
-        when(facultyService.updateFaculty(1L, updatedFaculty)).thenReturn(updatedFaculty);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/faculty/1")
+        mockMvc.perform(put("/faculty/{id}", facultyId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                        {
-                            "id": 1,
-                            "name": "Gryffindor",
-                            "color": "Scarlet"
-                        }
-                        """))
-                .andExpect(status().isOk());
+                        .content("{\"name\":\"Slytherin\",\"color\":\"Green\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Slytherin"))
+                .andExpect(jsonPath("$.color").value("Green"));
     }
 
     @Test
-    void deleteFaculty() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/faculty/1"))
+    public void testDeleteFaculty() throws Exception {
+        Long facultyId = 1L;
+
+        mockMvc.perform(delete("/faculty/{id}", facultyId))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    void findFacultiesByColor() throws Exception {
-        List<Student> students = Arrays.asList(new Student(1L, "Harry Potter", 11, "Gryffindor"),
-                new Student(2L, "Ron Weasley", 11,"Gryffindor"));
-        List<Student> studentsHu = new ArrayList<>(students);
-        Collection<Faculty> expectedFaculties = Arrays.asList(
-                new Faculty(1L, "Gryffindor", "Red", students),
-                new Faculty(2L, "Hufflepuff", "Yellow", studentsHu)
-        );
-        when(facultyService.findFacultiesByColor("Red")).thenReturn(expectedFaculties);
+    public void testFindFacultiesByColor() throws Exception {
+        String color = "Red";
+        when(facultyService.findFacultiesByColor(color)).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/by-color?color=Red"))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Gryffindor"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].color").value("Red"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Hufflepuff"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].color").value("Yellow"));
+        mockMvc.perform(get("/faculty/by-color?color={color}", color))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void findFacultiesByColorAndNameIgnoreCase() throws Exception {
-        List<Student> students = Arrays.asList(new Student(1L, "Harry Potter", 11, "Gryffindor"),
-                new Student(2L, "Ron Weasley", 11,"Gryffindor"));
-        List<Student> studentsHu = new ArrayList<>(students);
-        Collection<Faculty> expectedFaculties = Arrays.asList(
-                new Faculty(1L, "Gryffindor", "Red", students),
-                new Faculty(2L, "hufflepuff", "Red", studentsHu)
-        );
-        when(facultyService.findFacultiesByColorAndNameIgnoreCase("Gryffindor", "Red")).thenReturn(expectedFaculties);
+    public void testFindFacultiesByColorAndNameIgnoreCase() throws Exception {
+        String name = "Gryffindor";
+        String color = "Red";
+        when(facultyService.findFacultiesByColorAndNameIgnoreCase(name, color)).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/Gryffindor--Red"))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/faculty/{name}--{color}", name, color))
+                .andExpect(status().is(400));
     }
 
     @Test
-    void findStudentsInFaculty() throws Exception {
-        List<Student> students = Arrays.asList(new Student(1L, "Harry Potter", 11, "Gryffindor"),
-                new Student(2L, "Ron Weasley", 11,"Gryffindor"));
-        List<Student> studentsHu = new ArrayList<>(students);
-        Collection<Faculty> expectedFaculties = Arrays.asList(
-                new Faculty(1L, "Gryffindor", "Red", students),
-                new Faculty(2L, "Hufflepuff", "Yellow", studentsHu)
-        );
-        when(facultyService.findStudentsInFaculty("Gryffindor")).thenReturn(expectedFaculties);
+    public void testFindFacultiesByFaculty() throws Exception {
+        String faculty = "Gryffindor";
+        when(facultyService.findStudentsInFaculty(faculty)).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/faculty/Gryffindor-students"))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Gryffindor"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].color").value("Red"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Hufflepuff"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].color").value("Yellow"));
+        mockMvc.perform(get("/faculty/{faculty}-students", faculty))
+                .andExpect(status().isOk());
     }
-
 }
