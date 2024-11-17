@@ -10,7 +10,6 @@ import java.util.Collection;
 
 @Service
 public class FacultyService {
-
     private final FacultyRepository facultyRepository;
 
     @Autowired
@@ -23,7 +22,7 @@ public class FacultyService {
     }
 
     public Faculty findFaculty(Long id) {
-        return facultyRepository.findById( Math.toIntExact( id ) ).orElse(null);
+        return facultyRepository.findById(Math.toIntExact(id)).orElse(null);
     }
 
     public Faculty updateFaculty(Long id, Faculty faculty) {
@@ -32,7 +31,7 @@ public class FacultyService {
     }
 
     public void deleteFaculty(Long id) {
-        facultyRepository.deleteById( Math.toIntExact( id ) );
+        facultyRepository.deleteById(Math.toIntExact(id));
     }
 
     public Collection<Faculty> findFacultiesByColor(String color) {
@@ -40,10 +39,10 @@ public class FacultyService {
     }
 
     public Collection<Faculty> findFacultiesByColorAndNameIgnoreCase(String name, String color) {
-        return findFacultiesByColorAndNameIgnoreCase( name, color );
+        return findFacultiesByColorAndNameIgnoreCase(name, color);
     }
 
     public Collection<Faculty> findStudentsInFaculty(String faculty) {
-        return findStudentsInFaculty( faculty );
+        return findStudentsInFaculty(faculty);
     }
 }

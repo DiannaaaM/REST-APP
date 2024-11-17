@@ -1,4 +1,5 @@
 package ru.hogwarts.school.REST_APP.service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,10 @@ import java.util.UUID;
 
 @Service
 public class AvatarService {
-
-    @Value("${upload.path}") // Get the upload path from application.properties
+    @Value("${upload.path}")
     private String uploadPath;
 
+    @Autowired
     private final AvatarRepository avatarRepository;
 
     public AvatarService(AvatarRepository avatarRepository) {
@@ -31,7 +32,7 @@ public class AvatarService {
         String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         String fileName = uuid + extension;
         Path filePath = Paths.get(uploadPath, fileName);
-        Files.createDirectories(filePath.getParent()); // Create directories if needed
+        Files.createDirectories(filePath.getParent());
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         Avatar image = new Avatar();
         image.setName(fileName);

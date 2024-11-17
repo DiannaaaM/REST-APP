@@ -23,29 +23,28 @@ public class AvatarController {
 
     @PostMapping
     public ResponseEntity<Avatar> upload(@RequestParam("file") MultipartFile file) throws IOException {
-        Avatar image = avatarService.uploadImage( file );
-        return new ResponseEntity<>( image, HttpStatus.OK );
+        Avatar image = avatarService.uploadImage(file);
+        return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/db")
     public ResponseEntity<byte[]> getImageFromDb(@PathVariable Long id) {
-        byte[] imageData = avatarService.getImageData( id );
+        byte[] imageData = avatarService.getImageData(id);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType( MediaType.IMAGE_JPEG ); // Or other appropriate MediaType
-        return new ResponseEntity<>( imageData, headers, HttpStatus.OK );
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
     }
-
 
     @GetMapping("/{id}/file")
     public ResponseEntity<byte[]> getImageFromFile(@PathVariable Long id) throws IOException {
-        byte[] imageData = avatarService.getImageDataFromPath( id );
+        byte[] imageData = avatarService.getImageDataFromPath(id);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType( MediaType.IMAGE_JPEG ); // Or other appropriate MediaType
-        return new ResponseEntity<>( imageData, headers, HttpStatus.OK );
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
     }
 
     @GetMapping("/get-{allAvatars}+{sizePage}")
     public ResponseEntity<List<Avatar>> getAllAvatars(@PathVariable Integer allAvatars, @PathVariable Integer sizePage) {
-        return new ResponseEntity<List<Avatar>>( avatarService.getAllAvatars( allAvatars, sizePage ), HttpStatus.OK );
+        return new ResponseEntity<List<Avatar>>(avatarService.getAllAvatars(allAvatars, sizePage), HttpStatus.OK);
     }
 }
