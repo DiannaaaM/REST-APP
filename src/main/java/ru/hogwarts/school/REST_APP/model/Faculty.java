@@ -1,10 +1,13 @@
 package ru.hogwarts.school.REST_APP.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Entity
@@ -12,9 +15,13 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Faculty {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String color;
+    @OneToMany(mappedBy = "faculty")
+    private List<Student> students = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -33,5 +40,11 @@ public class Faculty {
     }
     public void setColor(String color) {
         this.color = color;
+    }
+    public List<Student> getStudents() {
+        return students;
+    }
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }
