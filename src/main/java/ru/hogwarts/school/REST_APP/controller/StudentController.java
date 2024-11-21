@@ -86,4 +86,16 @@ public class StudentController {
     public ResponseEntity<Double> findAverageAge() {
         return new ResponseEntity<>(studentService.findAverageAge(), HttpStatus.OK);
     }
+
+    @GetMapping("/names-A")
+    public ResponseEntity<List<Student>> findNamesA() {
+        return ResponseEntity.ok().body( studentService.findNamesOfStudentsA() );
+    }
+
+    @GetMapping("/getAverageAge")
+    public ResponseEntity<Double> getAverageAge() {
+        return new ResponseEntity<>(studentService.findAveragesAge(), HttpStatus.OK);
+    }
+
+
 }

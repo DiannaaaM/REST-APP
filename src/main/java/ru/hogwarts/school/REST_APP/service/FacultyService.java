@@ -7,7 +7,9 @@ import ru.hogwarts.school.REST_APP.model.Student;
 import ru.hogwarts.school.REST_APP.repository.FacultyRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
@@ -54,5 +56,17 @@ public class FacultyService {
     public Collection<Faculty> findStudentsInFaculty(String faculty) {
         logger.info("Finding students in faculty: " + faculty);
         return findStudentsInFaculty(faculty);
+    }
+
+    public List<Faculty> findAllFaculties() {
+        logger.info("Finding all faculties");
+        return facultyRepository.findAll();
+    }
+
+    public String getLongNameFaculty(){
+        logger.info("Getting long Name of faculty");
+        return findAllFaculties().stream()
+                .map(Faculty::getName)
+                .collect( Collectors.joining(", "));
     }
 }
