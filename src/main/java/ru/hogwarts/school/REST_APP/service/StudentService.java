@@ -9,6 +9,8 @@ import ru.hogwarts.school.REST_APP.repository.StudentRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -103,5 +105,50 @@ public class StudentService {
         logger.info( "Finding average age of students" );
         return  findAll().stream()
                 .collect(Collectors.averagingDouble(Student::getAge));
+    }
+
+    public void printParallel() {
+        List<Student> students = findAll();
+
+        // Вывод первых двух имен в основном потоке
+        System.out.println( students.get( 0 ).getName() );
+        System.out.println( students.get( 1 ).getName() );
+
+
+        Thread future1 = new Thread( () -> {
+            // Вывод имен третьего и четвертого студента в параллельном потоке
+            System.out.println( students.get( 2 ).getName() );
+            System.out.println( students.get( 3 ).getName() );
+        } );
+
+        Thread future2 = new Thread( () -> {
+            // Вывод имен пятого и шестого студента в еще одном параллельном потоке
+            System.out.println( students.get( 4 ).getName() );
+            System.out.println( students.get( 5 ).getName() );
+        } );
+        future1.start();
+        future2.start();
+    }
+    public void printSynchronized() {
+        List<Student> students = findAll();
+        // Синхронизированный метод для вывода имен
+        synchronized (this) {
+            System.out.println("Синхронизированный вывод:");
+            // Первые два имени выводятся в основном потоке
+            System.out.println(students.get(0).getName());
+            System.out.println(students.get(1).getName());
+            // Имена третьего и четвёртого студента выводятся в параллельном потоке
+            Thread future3 = new Thread(() -> {
+                System.out.println(students.get(2).getName());
+                System.out.println(students.get(3).getName());
+            });
+            // Имена пятого и шестого студента выводятся в ещё одном параллельном потоке
+            Thread future4 = new Thread(() -> {
+                System.out.println(students.get(4).getName());
+                System.out.println(students.get(5).getName());
+            });
+            future3.start();
+            future4.start();
+        }
     }
 }
