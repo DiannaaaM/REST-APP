@@ -59,4 +59,9 @@ public class FacultyController {
     public ResponseEntity<Collection<Faculty>> findFacultiesByFaculty(@PathVariable String faculty) {
         return new ResponseEntity<>(facultyService.findStudentsInFaculty(faculty), HttpStatus.OK);
     }
+
+    @GetMapping("/getLongName")
+    public ResponseEntity<String> getLongNameFaculty() {
+        return new ResponseEntity<>(facultyService.getLongNameFaculty(), HttpStatus.OK);
+    }
 }
