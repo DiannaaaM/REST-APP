@@ -13,6 +13,7 @@ import ru.hogwarts.school.REST_APP.service.StudentService;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Future;
 
 @RestController
 @RequestMapping("student")
@@ -85,5 +86,25 @@ public class StudentController {
     @GetMapping("/average-age")
     public ResponseEntity<Double> findAverageAge() {
         return new ResponseEntity<>(studentService.findAverageAge(), HttpStatus.OK);
+    }
+
+    @GetMapping("/names-A")
+    public ResponseEntity<List<Student>> findNamesA() {
+        return ResponseEntity.ok().body( studentService.findNamesOfStudentsA() );
+    }
+
+    @GetMapping("/getAverageAge")
+    public ResponseEntity<Double> getAverageAge() {
+        return new ResponseEntity<>(studentService.findAveragesAge(), HttpStatus.OK);
+    }
+
+    @GetMapping("/students/print-parallel")
+    public void printParallel() {
+        studentService.printParallel();
+    }
+
+    @GetMapping("/students/print-synchronized")
+    public void printSynchronized() {
+        studentService.printSynchronized();
     }
 }
